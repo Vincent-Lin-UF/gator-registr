@@ -1,0 +1,234 @@
+{
+  "requirements": {
+    "COP3503C - Programming Fundamentals 2": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ COP3503C - Programming Fundamentals 2",
+      "codes": [
+        "COP3503C"
+      ],
+      "rules": []
+    },
+    "CDA 3101  - Introduction to Computer Organization": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ CDA 3101  - Introduction to Computer Organization",
+      "codes": [
+        "CDA3101"
+      ],
+      "rules": []
+    },
+    "COT3100 - Applications of Discrete Structures": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ COT3100 - Applications of Discrete Structures",
+      "codes": [
+        "COT3100"
+      ],
+      "rules": []
+    },
+    "COP3530 - Data Structures and Algorithm": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ COP3530 - Data Structures and Algorithm",
+      "codes": [
+        "COP3530"
+      ],
+      "rules": []
+    },
+    "CIS4301 - Information and Database Systems 1": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ CIS4301 - Information and Database Systems 1",
+      "codes": [
+        "CIS4301"
+      ],
+      "rules": []
+    },
+    "COP4600 - Operating Systems": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ COP4600 - Operating Systems",
+      "codes": [
+        "COP4600"
+      ],
+      "rules": []
+    },
+    "CEN3031 - Introduction to Software Engineering": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ CEN3031 - Introduction to Software Engineering",
+      "codes": [
+        "CEN3031"
+      ],
+      "rules": []
+    },
+    "CNT4007 - Computer Network Fundamentals": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ CNT4007 - Computer Network Fundamentals",
+      "codes": [
+        "CNT4007"
+      ],
+      "rules": []
+    },
+    "COP4020 - Programming Language Concepts": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ COP4020 - Programming Language Concepts",
+      "codes": [
+        "COP4020"
+      ],
+      "rules": []
+    },
+    "COP4533 - Algorithm Abstraction and Design": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ COP4533 - Algorithm Abstraction and Design",
+      "codes": [
+        "COP4533"
+      ],
+      "rules": []
+    },
+    "EGN4952 - Integrated Product and Process Design 2 OR CIS4914 - Senior Project": {
+      "path": "Computer Science - Core and Elective Requirements▸ Computer Science - Core▸ EGN4952 - Integrated Product and Process Design 2 OR CIS4914 - Senior Project",
+      "codes": [
+        "EGN4952",
+        "CIS4914"
+      ],
+      "rules": []
+    },
+    "PHY2048L - Physics 1 Lab": {
+      "path": "Computer Science - Core and Elective Requirements▸ Pre-professional Labs▸ PHY2048L - Physics 1 Lab",
+      "codes": [
+        "PHY2048L"
+      ],
+      "rules": []
+    },
+    "PHY2049L - Physics 2 Lab": {
+      "path": "Computer Science - Core and Elective Requirements▸ Pre-professional Labs▸ PHY2049L - Physics 2 Lab",
+      "codes": [
+        "PHY2049L"
+      ],
+      "rules": []
+    },
+    "ENC3246 - Professional Communication for Engineers": {
+      "path": "Computer Science - Core and Elective Requirements▸ Summary of Major Coursework▸ ENC3246 - Professional Communication for Engineers",
+      "codes": [
+        "ENC3246",
+        "ENC2256"
+      ],
+      "rules": []
+    },
+    "MAS3114 or MAS4105 - Linear Algebra": {
+      "path": "Computer Science - Core and Elective Requirements▸ Summary of Major Coursework▸ MAS3114 or MAS4105 - Linear Algebra",
+      "codes": [
+        "MAS3114",
+        "MAS4105"
+      ],
+      "rules": []
+    },
+    "STA3032 - Engineering Statistics": {
+      "path": "Computer Science - Core and Elective Requirements▸ Summary of Major Coursework▸ STA3032 - Engineering Statistics",
+      "codes": [
+        "STA3032"
+      ],
+      "rules": []
+    },
+    "EGS4034 or CGS3065 - Professional Ethics": {
+      "path": "Computer Science - Core and Elective Requirements▸ Summary of Major Coursework▸ EGS4034 or CGS3065 - Professional Ethics",
+      "codes": [
+        "EGS4034",
+        "CGS3065",
+        "PHI3681"
+      ],
+      "rules": [
+        "Note: PHI3681/CGS3065 may count toward Tech Electives but not both."
+      ]
+    },
+    "Computer Science - Communications (3 Credits)": {
+      "path": "Computer Science - Communications (3 Credits)",
+      "codes": [
+        "ENC2256",
+        "ENC3246"
+      ],
+      "rules": []
+    },
+    "Approved Writing or Public Speaking Courses.  – (3 Credits)": {
+      "path": "Approved Writing or Public Speaking Courses.  – (3 Credits)",
+      "codes": [
+        "ENC2256",
+        "ENC3246"
+      ],
+      "rules": []
+    },
+    "Computer Science - Technical Electives (18 Credits)": {
+      "path": "Computer Science - Technical Electives (18 Credits)",
+      "codes": [],
+      "rules": [
+        "CISE tech: any 4000-level COP/COT/CDA/CEN/CIS/CNT; up to two CAP 3000-level; explicit: CIS4905/4930/4940, EGN4912, EGN4951, EEL3701C, EEL4744C, MAP2302.",
+        "Non-CISE tech: up to 4 credits from EIN3354, EGN4641, EGN4643, EGS4038; or any 4000+ ECE/PHY (except EEL4834); or any 4000+ STA/MAA/MAD/MAP/MAS/MHF."
+      ]
+    },
+    "Technical Electives and Co-Op/Internship Courses": {
+      "path": "Technical Electives and Co-Op/Internship Courses",
+      "codes": [],
+      "rules": [
+        "CISE tech: any 4000-level COP/COT/CDA/CEN/CIS/CNT; up to two CAP 3000-level; explicit: CIS4905/4930/4940, EGN4912, EGN4951, EEL3701C, EEL4744C, MAP2302.",
+        "Non-CISE tech: up to 4 credits from EIN3354, EGN4641, EGN4643, EGS4038; or any 4000+ ECE/PHY (except EEL4834); or any 4000+ STA/MAA/MAD/MAP/MAS/MHF."
+      ]
+    }
+  },
+  "course_to_requirements": {
+    "COP3503C": [
+      "COP3503C - Programming Fundamentals 2"
+    ],
+    "CDA3101": [
+      "CDA 3101  - Introduction to Computer Organization"
+    ],
+    "COT3100": [
+      "COT3100 - Applications of Discrete Structures"
+    ],
+    "COP3530": [
+      "COP3530 - Data Structures and Algorithm"
+    ],
+    "CIS4301": [
+      "CIS4301 - Information and Database Systems 1"
+    ],
+    "COP4600": [
+      "COP4600 - Operating Systems"
+    ],
+    "CEN3031": [
+      "CEN3031 - Introduction to Software Engineering"
+    ],
+    "CNT4007": [
+      "CNT4007 - Computer Network Fundamentals"
+    ],
+    "COP4020": [
+      "COP4020 - Programming Language Concepts"
+    ],
+    "COP4533": [
+      "COP4533 - Algorithm Abstraction and Design"
+    ],
+    "EGN4952": [
+      "EGN4952 - Integrated Product and Process Design 2 OR CIS4914 - Senior Project"
+    ],
+    "CIS4914": [
+      "EGN4952 - Integrated Product and Process Design 2 OR CIS4914 - Senior Project"
+    ],
+    "PHY2048L": [
+      "PHY2048L - Physics 1 Lab"
+    ],
+    "PHY2049L": [
+      "PHY2049L - Physics 2 Lab"
+    ],
+    "ENC3246": [
+      "Approved Writing or Public Speaking Courses.  – (3 Credits)",
+      "Computer Science - Communications (3 Credits)",
+      "ENC3246 - Professional Communication for Engineers"
+    ],
+    "ENC2256": [
+      "Approved Writing or Public Speaking Courses.  – (3 Credits)",
+      "Computer Science - Communications (3 Credits)",
+      "ENC3246 - Professional Communication for Engineers"
+    ],
+    "MAS3114": [
+      "MAS3114 or MAS4105 - Linear Algebra"
+    ],
+    "MAS4105": [
+      "MAS3114 or MAS4105 - Linear Algebra"
+    ],
+    "STA3032": [
+      "STA3032 - Engineering Statistics"
+    ],
+    "EGS4034": [
+      "EGS4034 or CGS3065 - Professional Ethics"
+    ],
+    "CGS3065": [
+      "EGS4034 or CGS3065 - Professional Ethics"
+    ],
+    "PHI3681": [
+      "EGS4034 or CGS3065 - Professional Ethics"
+    ]
+  }
+}
