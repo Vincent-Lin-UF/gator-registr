@@ -1,6 +1,4 @@
-# New One.UF - Backend
-
-FastAPI-based backend service for University of Florida course registration and schedule management.
+# Backend
 
 ## Features
 
