@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import health, course_proxy
+from app.routers import health, course_proxy, course_search
 from app.config.settings import settings
 
 def create_app() -> FastAPI:
@@ -16,6 +16,7 @@ def create_app() -> FastAPI:
     
     api.include_router(health.router, prefix="/v1")
     api.include_router(course_proxy.router, prefix="/v1")
+    api.include_router(course_search.router, prefix="/v1")
     return api
 
 app = create_app()
