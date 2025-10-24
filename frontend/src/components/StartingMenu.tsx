@@ -12,7 +12,6 @@ import {
     Menu,
     MenuItem,
     Divider,
-    Grid,
     Card,
     CardHeader,
     CardContent,
@@ -27,6 +26,7 @@ import {
     ListItemText,
     Link,
 } from "@mui/material";
+import Grid from "@mui/material/Grid"
 import LayersIcon from "@mui/icons-material/Layers";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import SchoolIcon from "@mui/icons-material/School";
@@ -184,7 +184,7 @@ export default function StartingMenu() {
             <Container maxWidth="lg" sx={{ py: 3 }}>
                 <Grid container spacing={3}>
                     {/* Left: Requirements */}
-                    <Grid item xs={12} lg={4}>
+                    <Grid size={{xs: 12, lg: 4}}>
                         <Stack spacing={2}>
                             <Card variant="outlined">
                                 <CardHeader
@@ -246,7 +246,7 @@ export default function StartingMenu() {
                                             { title: "Transfer Map", desc: "Max credit overlap" },
                                             { title: "Explore Paths", desc: "See course pathways" },
                                         ].map((q) => (
-                                            <Grid item xs={12} sm={6} key={q.title}>
+                                            <Grid size={{xs: 12, sm:6}} key={q.title}>
                                                 <Button fullWidth variant="outlined" endIcon={<ArrowForwardIcon />} sx={{ justifyContent: "space-between", textTransform: "none" }}>
                                                     <Box textAlign="left">
                                                         <Typography variant="body2" fontWeight={600}>{q.title}</Typography>
@@ -262,7 +262,7 @@ export default function StartingMenu() {
                     </Grid>
 
                     {/* Right: Search & Courses */}
-                    <Grid item xs={12} lg={8}>
+                    <Grid size={{xs:12, lg:8}}>
                         <Stack spacing={2}>
                             <Card variant="outlined">
                                 <CardContent>
@@ -303,7 +303,7 @@ export default function StartingMenu() {
 
                             <Grid container spacing={2}>
                                 {filtered.map((c) => (
-                                    <Grid item xs={12} sm={6} key={c.code}>
+                                    <Grid size={{xs: 12, sm:6}} key={c.code}>
                                         <Card variant="outlined" sx={{ transition: "background .15s", '&:hover': { bgcolor: 'action.hover' } }}>
                                             <CardHeader
                                                 title={
