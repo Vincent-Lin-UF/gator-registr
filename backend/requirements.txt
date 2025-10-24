@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+pydantic
+mypy
+pre-commit
+httpx
