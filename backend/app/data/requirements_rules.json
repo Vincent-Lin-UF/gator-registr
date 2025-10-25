@@ -1,0 +1,286 @@
+{
+  "rules": [
+    {
+      "name": "COP3503C - Programming Fundamentals 2",
+      "type": "exact_any",
+      "codes": [
+        "COP 3503C"
+      ]
+    },
+    {
+      "name": "CDA 3101  - Introduction to Computer Organization",
+      "type": "exact_any",
+      "codes": [
+        "CDA 3101"
+      ]
+    },
+    {
+      "name": "COT3100 - Applications of Discrete Structures",
+      "type": "exact_any",
+      "codes": [
+        "COT 3100"
+      ]
+    },
+    {
+      "name": "COP3530 - Data Structures and Algorithm",
+      "type": "exact_any",
+      "codes": [
+        "COP 3530"
+      ]
+    },
+    {
+      "name": "CIS4301 - Information and Database Systems 1",
+      "type": "exact_any",
+      "codes": [
+        "CIS 4301"
+      ]
+    },
+    {
+      "name": "COP4600 - Operating Systems",
+      "type": "exact_any",
+      "codes": [
+        "COP 4600"
+      ]
+    },
+    {
+      "name": "CEN3031 - Introduction to Software Engineering",
+      "type": "exact_any",
+      "codes": [
+        "CEN 3031"
+      ]
+    },
+    {
+      "name": "CNT4007 - Computer Network Fundamentals",
+      "type": "exact_any",
+      "codes": [
+        "CNT 4007"
+      ]
+    },
+    {
+      "name": "COP4020 - Programming Language Concepts",
+      "type": "exact_any",
+      "codes": [
+        "COP 4020"
+      ]
+    },
+    {
+      "name": "COP4533 - Algorithm Abstraction and Design",
+      "type": "exact_any",
+      "codes": [
+        "COP 4533"
+      ]
+    },
+    {
+      "name": "EGN4952 - Integrated Product and Process Design 2 OR CIS4914 - Senior Project",
+      "type": "exact_any",
+      "codes": [
+        "CIS 4914",
+        "EGN 4952"
+      ]
+    },
+    {
+      "name": "PHY2048L - Physics 1 Lab",
+      "type": "exact_any",
+      "codes": [
+        "PHY 2048L"
+      ]
+    },
+    {
+      "name": "PHY2049L - Physics 2 Lab",
+      "type": "exact_any",
+      "codes": [
+        "PHY 2049L"
+      ]
+    },
+    {
+      "name": "ENC3246 - Professional Communication for Engineers",
+      "type": "exact_any",
+      "codes": [
+        "ENC 3246"
+      ]
+    },
+    {
+      "name": "MAS3114 or MAS4105 - Linear Algebra",
+      "type": "exact_any",
+      "codes": [
+        "MAS 3114",
+        "MAS 4105"
+      ]
+    },
+    {
+      "name": "STA3032 - Engineering Statistics",
+      "type": "exact_any",
+      "codes": [
+        "STA 3032"
+      ]
+    },
+    {
+      "name": "EGS4034 or CGS3065 - Professional Ethics",
+      "type": "exact_any",
+      "codes": [
+        "CGS 3065",
+        "EGS 4034"
+      ]
+    },
+    {
+      "name": "Approved Writing or Public Speaking Courses.  \u2013 (3 Credits)",
+      "type": "patterns",
+      "patterns": [],
+      "notes": "Computer Science - Core and Elective Requirements\u25b8 Computer Science - Communications (3 Credits)\u25b8 Approved Writing or Public Speaking Courses.  \u2013 (3 Credits) | Approved Writing or Public Speaking Courses.  \u2013 (3 Credits) | 503571 | 88 | 0 | 3.0 | 0 | UGENG | CPS_BSCS | nan"
+    },
+    {
+      "name": "Computer Science - Technical Electives (18 Credits)",
+      "type": "patterns",
+      "patterns": [],
+      "notes": "Computer Science - Core and Elective Requirements\u25b8 Computer Science - Technical Electives (18 Credits) | Computer Science - Technical Electives (18 Credits) | 503571 | 89 | 0 | 0.0 | 0 | UGENG | CPS_BSCS | nan"
+    },
+    {
+      "name": "Computer Science - Interdisciplinary Electives (14 Credits)",
+      "type": "patterns",
+      "patterns": [],
+      "notes": "Computer Science - Core and Elective Requirements\u25b8 Computer Science - Interdisciplinary Electives (14 Credits) | Computer Science - Interdisciplinary Electives (14 Credits) | 503571 | 95 | 0 | 0.0 | 0 | UGENG | CPS_BSCS | nan"
+    },
+    {
+      "name": "Ethics",
+      "type": "exact_any",
+      "codes": [
+        "CGS 3065",
+        "EGS 4034",
+        "PHI 3681"
+      ]
+    },
+    {
+      "name": "Communications Primary",
+      "type": "exact_any",
+      "codes": [
+        "ENC 2256",
+        "ENC 3246"
+      ]
+    },
+    {
+      "name": "CS Major Core",
+      "type": "exact_any",
+      "codes": [
+        "CDA 3101",
+        "CEN 3031",
+        "CIS 4301",
+        "CIS 4914",
+        "CNT 4007",
+        "COP 3502C",
+        "COP 3503C",
+        "COP 3530",
+        "COP 4020",
+        "COP 4533",
+        "COP 4600",
+        "COT 3100",
+        "EGN 4952"
+      ]
+    },
+    {
+      "name": "Mathematics Sequence",
+      "type": "exact_any",
+      "codes": [
+        "MAC 2311",
+        "MAC 2312",
+        "MAC 2313",
+        "MAS 3114",
+        "STA 3032"
+      ]
+    },
+    {
+      "name": "Physics Sequence",
+      "type": "exact_any",
+      "codes": [
+        "PHY 2048",
+        "PHY 2048L",
+        "PHY 2049",
+        "PHY 2049L"
+      ]
+    },
+    {
+      "name": "CISE Technical Elective (per-course eligibility)",
+      "type": "patterns",
+      "patterns": [
+        {
+          "kind": "prefix_level_at_least",
+          "prefixes": [
+            "CDA",
+            "CEN",
+            "CIS",
+            "CNT",
+            "COP"
+          ],
+          "min_level": 4000
+        },
+        {
+          "kind": "prefix_level_between",
+          "prefix": "CAP",
+          "min_level": 3000,
+          "max_level": 3999
+        },
+        {
+          "kind": "exact_any",
+          "codes": [
+            "EEL 3701C",
+            "EEL 4744C",
+            "MAP 2302"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Non-CISE Technical Elective (per-course eligibility)",
+      "type": "patterns",
+      "patterns": [
+        {
+          "kind": "exact_any",
+          "codes": [
+            "EGN 4641",
+            "EGN 4643",
+            "EGS 4038",
+            "EIN 3354"
+          ]
+        },
+        {
+          "kind": "prefix_level_at_least",
+          "prefixes": [
+            "EEL",
+            "EEE",
+            "PHY"
+          ],
+          "min_level": 4000,
+          "exclude": [
+            "EEL 4834"
+          ]
+        },
+        {
+          "kind": "prefix_level_at_least",
+          "prefixes": [
+            "MAA",
+            "MAD",
+            "MAP",
+            "MAS",
+            "MHF",
+            "STA"
+          ],
+          "min_level": 4000
+        }
+      ]
+    },
+    {
+      "name": "Additional Communications (approved list \u2013 settable)",
+      "type": "exact_any",
+      "codes": [
+        "ENC 2210",
+        "ENC 3254",
+        "ENC 3453",
+        "SPC 2608",
+        "EEL 3923C"
+      ]
+    },
+    {
+      "name": "General Elective",
+      "type": "any_course"
+    }
+  ]
+}

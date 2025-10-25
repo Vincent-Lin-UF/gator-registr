@@ -2,12 +2,11 @@ from __future__ import annotations
 from typing import Optional, List
 from pydantic import BaseModel, Field
 
-class Course(BaseModel):
-    id: str = Field(..., description="Unique Identifer")
-    course_code: str = Field(..., description="Course Code (e.g. COP3503)")
-    title: str = Field(..., description="Course Title")
-    credits: float = Field(..., ge=0.0, description="# of Credits")
-
+# class Course(BaseModel):
+#     id: str = Field(..., description="Unique Identifer")
+#     course_code: str = Field(..., description="Course Code (e.g. COP3503)")
+#     title: str = Field(..., description="Course Title")
+#     credits: float = Field(..., ge=0.0, description="# of Credits")
 
 
 class Meeting(BaseModel):
@@ -21,8 +20,8 @@ class Meeting(BaseModel):
     meetBldgCode: Optional[str] = None
     meetRoom: Optional[str] = None
 
-@dataclass
-class Section:
+
+class Section(BaseModel):
     number: Optional[str] = None
     classNumber: Optional[int] = None
     display: Optional[str] = None
@@ -40,7 +39,6 @@ class Section:
     dropaddDeadline: Optional[str] = None
     openSeats: Optional[int] = None
     courseFee: Optional[str] = None
-    grWriting: Optional[bool] = None
     EEP: Optional[bool] = None
     lateFlag: Optional[bool] = None
     isAICourse: Optional[bool] = None
@@ -51,8 +49,8 @@ class Section:
     instructors: List[str] = None
     meetings: List[Meeting] = None
 
-@dataclass
-class Course:
+
+class Course(BaseModel):
     code: Optional[str] = None
     courseId: Optional[int] = None
     name: Optional[str] = None
@@ -61,3 +59,14 @@ class Course:
     openSeats: Optional[int] = None
     termInd: Optional[str] = None
     sections: List[Section] = None
+
+
+class FilterParams(BaseModel):
+    requirement_satisfied: str | None
+    course_code: str | None
+    instructor: str | None
+
+
+class CourseSearchResponse(BaseModel):
+    courses: List[Course]
+
