@@ -50,7 +50,7 @@ class UserRequirementsParams(BaseModel):
 
 
 @router.get("/user_requirements", response_model=list[str])
-def user_requirements(req: UserRequirementsParams = Depends()) -> list[str]:
+def user_requirements() -> list[str]:
     with open('app/data/requirements_rules_with_status.json', 'r') as f:
         data = json.load(f)
         return [rule["name"] for rule in data['rules'] if not rule["completed"]]

@@ -25,7 +25,7 @@ import {
     ListItemText,
     Link,
 } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid"; // <-- Grid v2
 import LayersIcon from "@mui/icons-material/Layers";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import SchoolIcon from "@mui/icons-material/School";
@@ -39,21 +39,38 @@ import BoltIcon from "@mui/icons-material/Bolt";
 interface Course {
     code: string;
     title: string;
-    seats: number | "N/A";
     req: string;
     difficulty: number;
     id: string;
 }
 
-// --- Mock requirements for left panel ---
-const mockRequirements = [
-    { id: 1, name: "Gen Ed: Composition (3cr)", status: "Remaining", code: "GE-C" },
-    { id: 2, name: "Math Core: Calculus I (4cr)", status: "Fulfilled", code: "MAC2311" },
-    { id: 3, name: "CS Core: Programming I (4cr)", status: "In Progress", code: "COP3502" },
-    { id: 4, name: "Electives (6cr)", status: "Remaining", code: "ELEC" },
-];
+// 1) Replace your Course interface with a course-level summary
+interface Course {
+    code: string;
+    title: string;
+    seats: number | "N/A";     // aggregated total (or "N/A")
+    sectionsCount: number;      // how many sections exist
+    req: string;
+    difficulty: number;
+    id: string;                 // use course code so it's unique per course
+}
 
-// --- Difficulty meter component ---
+// 2) Helper to map API payload to unique courses
+function mapApiToCourses(data: any, requirement: string | null): Course[] {
+    const list: any[] = Array.isArray(data?.courses) ? data.courses : [];
+    return list.map((c) => {
+        const sections = Array.isArray(c.sections) ? c.sections : [];
+        return {
+            code: c.code,
+            title: c.name,
+            sectionsCount: sections.length,
+            req: requirement ?? "Req TBD",
+            difficulty: Math.min(5, Math.max(1, Math.floor(Math.random() * 5) + 1)),
+            id: c.code,
+        } as Course;
+    });
+}
+
 function DifficultyMeter({ level }: { level: number }) {
     const bars = useMemo(() => Array.from({ length: 5 }, (_, i) => i + 1), []);
     return (
@@ -77,6 +94,8 @@ function DifficultyMeter({ level }: { level: number }) {
     );
 }
 
+const API_BASE = "http://127.0.0.1:8000";
+
 export default function StartingMenu() {
     const [query, setQuery] = useState("");
     const [semester, setSemester] = useState("Spring 2026");
@@ -89,77 +108,84 @@ export default function StartingMenu() {
     const [semAnchor, setSemAnchor] = useState<null | HTMLElement>(null);
     const [majorAnchor, setMajorAnchor] = useState<null | HTMLElement>(null);
 
-    // --- Fetch courses from backend ---
-    useEffect(() => {
-        async function fetchCourses(searchQuery = "") {
-            try {
-                const courseCode = "null";
-                const instructor = "null";
-                const requirementSatisfied = "null";
-                const url = new URL("http://127.0.0.1:8000/v1/uf/search");
-                if (courseCode) url.searchParams.append("course_code", courseCode);
-                if (instructor) url.searchParams.append("instructor", instructor);
-                if (requirementSatisfied) url.searchParams.append("requirement_satisfied", requirementSatisfied);
+    // Filters
+    const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
+    const [allRequirements, setAllRequirements] = useState<string[]>([]);
+    const [selectedRequirement, setSelectedRequirement] = useState<string | null>(null);
 
-                const res = await fetch(url.toString());
-                const data = await res.json();
+    // Remaining requirements
+    const [remainingReqs, setRemainingReqs] = useState<string[]>([]);
 
-                const mapped: Course[] = (data.courses || []).flatMap((c: any) =>
-                    (c.sections || []).map((s: any) => ({
-                        code: c.code,
-                        title: c.name,
-                        seats: s.openSeats ?? "N/A",
-                        req: "Req TBD",
-                        difficulty: Math.min(5, Math.max(1, Math.floor(Math.random() * 5) + 1)),
-                        id: s.classNumber ?? `${c.code}-${s.number}`,
-                    }))
-                );
+    const fetchCourses = async (searchQuery = "", requirement: string | null = selectedRequirement) => {
+        try {
+            const courseCode = searchQuery || "null";
+            const instructor = "null";
+            const requirementSatisfied = requirement ?? "null";
+            const url = new URL(`${API_BASE}/v1/uf/search`);
+            url.searchParams.append("course_code", courseCode);
+            url.searchParams.append("instructor", instructor);
+            url.searchParams.append("requirement_satisfied", requirementSatisfied);
 
-                setCourses(mapped);
-            } catch (err) {
-                console.error("Failed to fetch courses:", err);
-            }
+            const res = await fetch(url.toString());
+            const data = await res.json();
+
+            const mapped: Course[] = (data.courses || []).flatMap((c: any) =>
+                (c.sections || []).map((s: any) => ({
+                    code: c.code,
+                    title: c.name,
+                    seats: s.openSeats ?? "N/A",
+                    req: requirement ?? "Req TBD",
+                    difficulty: Math.min(5, Math.max(1, Math.floor(Math.random() * 5) + 1)),
+                    id: s.classNumber ?? `${c.code}-${s.number}`,
+                }))
+            );
+            setCourses(mapApiToCourses(data, requirement));
+        } catch (err) {
+            console.error("Failed to fetch courses:", err);
         }
+    };
 
+    useEffect(() => {
         fetchCourses();
+
+        (async () => {
+            try {
+                const r = await fetch(`${API_BASE}/v1/uf/all_requirements`);
+                const list: string[] = await r.json();
+                setAllRequirements(Array.isArray(list) ? list : []);
+            } catch (e) {
+                console.error("Failed to load all requirements:", e);
+            }
+        })();
+
+        (async () => {
+            try {
+                const r = await fetch(`${API_BASE}/v1/uf/user_requirements`);
+                const list: string[] = await r.json();
+                setRemainingReqs(Array.isArray(list) ? list : []);
+            } catch (e) {
+                console.error("Failed to load user requirements:", e);
+            }
+        })();
     }, []);
 
     const filtered = useMemo(() => {
         const q = query.toLowerCase();
         return courses.filter(
-            (c) =>
-                c.title.toLowerCase().includes(q) ||
-                c.code.toLowerCase().includes(q)
+            (c) => c.title.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
         );
     }, [courses, query]);
 
     const handleSearch = () => {
-        const courseCode = query || "null";
-        const instructor = "null";
-        const requirementSatisfied = "null"; 
+        fetchCourses(query, selectedRequirement);
+        setVisibleCount(4);
+    };
 
-        const url = new URL("http://127.0.0.1:8000/v1/uf/search");
-        url.searchParams.append("course_code", courseCode);
-        url.searchParams.append("instructor", instructor);
-        url.searchParams.append("requirement_satisfied", requirementSatisfied);
-
-        fetch(url.toString())
-            .then((res) => res.json())
-            .then((data) => {
-                const mapped: Course[] = (data.courses || []).flatMap((c: any) =>
-                    (c.sections || []).map((s: any) => ({
-                        code: c.code,
-                        title: c.name,
-                        seats: s.openSeats ?? "N/A",
-                        req: "Req TBD",
-                        difficulty: Math.min(5, Math.max(1, Math.floor(Math.random() * 5) + 1)),
-                        id: s.classNumber ?? `${c.code}-${s.number}`,
-                    }))
-                );
-                setCourses(mapped);
-                setVisibleCount(4);
-            })
-            .catch((err) => console.error("Failed to fetch courses:", err));
+    const handleRequirementPick = async (req: string | null) => {
+        setSelectedRequirement(req);
+        setFilterAnchor(null);
+        await fetchCourses(query, req);
+        setVisibleCount(4);
     };
 
     return (
@@ -214,24 +240,50 @@ export default function StartingMenu() {
                         </Menu>
                     </Box>
 
-                    <Button variant="outlined" size="small" startIcon={<FilterListIcon fontSize="small" />}>Filters</Button>
+                    {/* Filters */}
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<FilterListIcon fontSize="small" />}
+                        onClick={(e) => setFilterAnchor(e.currentTarget)}
+                    >
+                        {selectedRequirement ? `Filter: ${selectedRequirement}` : "Filters"}
+                    </Button>
+                    <Menu
+                        anchorEl={filterAnchor}
+                        open={Boolean(filterAnchor)}
+                        onClose={() => setFilterAnchor(null)}
+                        sx={{ maxHeight: 480 }}
+                    >
+                        <Typography variant="caption" sx={{ px: 2, pt: 1 }}>Filter by requirement</Typography>
+                        <Divider sx={{ my: 1 }} />
+                        <MenuItem onClick={() => handleRequirementPick(null)} dense>
+                            <Chip size="small" label="Clear filter" variant="outlined" />
+                        </MenuItem>
+                        <Divider />
+                        {allRequirements.length === 0 ? (
+                            <MenuItem disabled dense>Loading…</MenuItem>
+                        ) : (
+                            allRequirements.map((req) => (
+                                <MenuItem
+                                    key={req}
+                                    onClick={() => handleRequirementPick(req)}
+                                    selected={req === selectedRequirement}
+                                    dense
+                                >
+                                    {req}
+                                </MenuItem>
+                            ))
+                        )}
+                    </Menu>
 
-                    <MUIBadge color="primary" badgeContent={cartCount} overlap="circular">
-                        <Button variant="outlined" size="small" startIcon={<ShoppingCartIcon fontSize="small" />}>Cart</Button>
-                    </MUIBadge>
-
-                    <FormControlLabel
-                        sx={{ ml: 1 }}
-                        control={<Switch checked={whatIf} onChange={(e) => setWhatIf(e.target.checked)} />}
-                        label={<Chip label="What-If" size="small" variant="outlined" />}
-                    />
                 </Toolbar>
             </AppBar>
 
             {/* Main */}
             <Container maxWidth="lg" sx={{ py: 3 }}>
                 <Grid container spacing={3}>
-                    {/* Left: Requirements */}
+                    {/* Left: Remaining Requirements */}
                     <Grid size={{ xs: 12, lg: 4 }}>
                         <Stack spacing={2}>
                             <Card variant="outlined">
@@ -246,20 +298,45 @@ export default function StartingMenu() {
                                 />
                                 <CardContent>
                                     <List dense disablePadding>
-                                        {mockRequirements.map((r) => (
+                                        {remainingReqs.map((name) => (
                                             <ListItem
-                                                key={r.id}
-                                                sx={{ my: 0.5, border: 1, borderColor: "divider", borderRadius: 1.5, px: 1.5 }}
-                                                secondaryAction={<Chip label={r.status} size="small" />}
+                                                key={name}
+                                                sx={{
+                                                    my: 0.5,
+                                                    border: 1,
+                                                    borderColor: "divider",
+                                                    borderRadius: 1.5,
+                                                    px: 1.5,
+                                                    // make sure item has enough right padding so text wraps before the chip
+                                                    pr: 12, // ~96px; adjust if your chip gets wider
+                                                }}
+                                                secondaryAction={
+                                                    <Box sx={{ minWidth: 90, display: "flex", justifyContent: "flex-end" }}>
+                                                        <Chip label="Remaining" size="small" />
+                                                    </Box>
+                                                }
                                             >
                                                 <ListItemText
-                                                    primaryTypographyProps={{ variant: "body2", fontWeight: 600 }}
-                                                    secondaryTypographyProps={{ variant: "caption", color: "text.secondary" }}
-                                                    primary={r.name}
-                                                    secondary={`Code: ${r.code}`}
+                                                    primary={name}
+                                                    primaryTypographyProps={{
+                                                        variant: "body2",
+                                                        fontWeight: 600,
+                                                        // ensure wrapping even for long tokens
+                                                        noWrap: false,
+                                                    }}
+                                                    sx={{
+                                                        overflowWrap: "anywhere",
+                                                        wordBreak: "break-word",
+                                                    }}
                                                 />
                                             </ListItem>
                                         ))}
+
+                                        {remainingReqs.length === 0 && (
+                                            <Typography variant="caption" color="text.secondary">
+                                                No remaining requirements found.
+                                            </Typography>
+                                        )}
                                     </List>
                                     <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 1.5 }}>
                                         <InfoOutlinedIcon sx={{ fontSize: 16 }} />
@@ -309,12 +386,6 @@ export default function StartingMenu() {
                                                         <Typography variant="subtitle2" fontWeight={700}>
                                                             {c.code} · {c.title}
                                                         </Typography>
-                                                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
-                                                            <Chip size="small" variant="outlined" label={c.req} />
-                                                            <Typography variant="caption" color="text.secondary">
-                                                                Seats: {c.seats}
-                                                            </Typography>
-                                                        </Stack>
                                                     </Box>
                                                 }
                                                 action={<DifficultyMeter level={c.difficulty} />}
@@ -322,15 +393,7 @@ export default function StartingMenu() {
                                             />
                                             <CardContent sx={{ pt: 1.5 }}>
                                                 <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                                    <Typography variant="caption" color="text.secondary">
-                                                        Hover to preview satisfied requirements
-                                                    </Typography>
-                                                    <Stack direction="row" spacing={1}>
-                                                        <Button size="small" variant="outlined">What-If</Button>
-                                                        <Button size="small" variant="contained" onClick={() => setCartCount((n) => n + 1)}>
-                                                            Add to Cart
-                                                        </Button>
-                                                    </Stack>
+
                                                 </Stack>
                                             </CardContent>
                                         </Card>
@@ -350,7 +413,10 @@ export default function StartingMenu() {
 
             {/* Footer */}
             <Box component="footer" sx={{ borderTop: 1, borderColor: "divider", mt: 6 }}>
-                <Container maxWidth="lg" sx={{ py: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <Container
+                    maxWidth="lg"
+                    sx={{ py: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}
+                >
                     <Typography variant="caption" color="text.secondary">
                         © {new Date().getFullYear()} CoursePath — UI Preview
                     </Typography>
