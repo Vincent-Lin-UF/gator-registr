@@ -1,11 +1,10 @@
-import { useMemo, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
     AppBar,
     Toolbar,
     Container,
     Box,
     Typography,
-    IconButton,
     Button,
     Chip,
     Badge as MUIBadge,
@@ -26,7 +25,7 @@ import {
     ListItemText,
     Link,
 } from "@mui/material";
-import Grid from "@mui/material/Grid"
+import Grid from "@mui/material/Grid";
 import LayersIcon from "@mui/icons-material/Layers";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import SchoolIcon from "@mui/icons-material/School";
@@ -36,9 +35,17 @@ import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
 import BoltIcon from "@mui/icons-material/Bolt";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-// --- Mock data (static placeholders for UI only) ---
+interface Course {
+    code: string;
+    title: string;
+    seats: number | "N/A";
+    req: string;
+    difficulty: number;
+    id: string;
+}
+
+// --- Mock requirements for left panel ---
 const mockRequirements = [
     { id: 1, name: "Gen Ed: Composition (3cr)", status: "Remaining", code: "GE-C" },
     { id: 2, name: "Math Core: Calculus I (4cr)", status: "Fulfilled", code: "MAC2311" },
@@ -46,13 +53,7 @@ const mockRequirements = [
     { id: 4, name: "Electives (6cr)", status: "Remaining", code: "ELEC" },
 ];
 
-const mockCourses = [
-    { code: "COP3502", title: "Programming Fundamentals 1", seats: 151, req: "CS Core", difficulty: 3 },
-    { code: "MAC2311", title: "Analytic Geometry & Calculus 1", seats: 48, req: "Math Core", difficulty: 4 },
-    { code: "ENC1101", title: "Expository & Argumentative Writing", seats: 12, req: "Gen Ed: Comp", difficulty: 2 },
-    { code: "PSY2012", title: "General Psychology", seats: 77, req: "Gen Ed: Soc Sci", difficulty: 2 },
-];
-
+// --- Difficulty meter component ---
 function DifficultyMeter({ level }: { level: number }) {
     const bars = useMemo(() => Array.from({ length: 5 }, (_, i) => i + 1), []);
     return (
@@ -82,20 +83,84 @@ export default function StartingMenu() {
     const [major, setMajor] = useState("Computer Science (BS)");
     const [whatIf, setWhatIf] = useState(false);
     const [cartCount, setCartCount] = useState(0);
+    const [courses, setCourses] = useState<Course[]>([]);
+    const [visibleCount, setVisibleCount] = useState(4);
 
-    // Menus
     const [semAnchor, setSemAnchor] = useState<null | HTMLElement>(null);
     const [majorAnchor, setMajorAnchor] = useState<null | HTMLElement>(null);
 
-    const filtered = useMemo(
-        () =>
-            mockCourses.filter(
-                (c) =>
-                    c.title.toLowerCase().includes(query.toLowerCase()) ||
-                    c.code.toLowerCase().includes(query.toLowerCase())
-            ),
-        [query]
-    );
+    // --- Fetch courses from backend ---
+    useEffect(() => {
+        async function fetchCourses(searchQuery = "") {
+            try {
+                const courseCode = "null";
+                const instructor = "null";
+                const requirementSatisfied = "null";
+                const url = new URL("http://127.0.0.1:8000/v1/uf/search");
+                if (courseCode) url.searchParams.append("course_code", courseCode);
+                if (instructor) url.searchParams.append("instructor", instructor);
+                if (requirementSatisfied) url.searchParams.append("requirement_satisfied", requirementSatisfied);
+
+                const res = await fetch(url.toString());
+                const data = await res.json();
+
+                const mapped: Course[] = (data.courses || []).flatMap((c: any) =>
+                    (c.sections || []).map((s: any) => ({
+                        code: c.code,
+                        title: c.name,
+                        seats: s.openSeats ?? "N/A",
+                        req: "Req TBD",
+                        difficulty: Math.min(5, Math.max(1, Math.floor(Math.random() * 5) + 1)),
+                        id: s.classNumber ?? `${c.code}-${s.number}`,
+                    }))
+                );
+
+                setCourses(mapped);
+            } catch (err) {
+                console.error("Failed to fetch courses:", err);
+            }
+        }
+
+        fetchCourses();
+    }, []);
+
+    const filtered = useMemo(() => {
+        const q = query.toLowerCase();
+        return courses.filter(
+            (c) =>
+                c.title.toLowerCase().includes(q) ||
+                c.code.toLowerCase().includes(q)
+        );
+    }, [courses, query]);
+
+    const handleSearch = () => {
+        const courseCode = query || "null";
+        const instructor = "null";
+        const requirementSatisfied = "null"; 
+
+        const url = new URL("http://127.0.0.1:8000/v1/uf/search");
+        url.searchParams.append("course_code", courseCode);
+        url.searchParams.append("instructor", instructor);
+        url.searchParams.append("requirement_satisfied", requirementSatisfied);
+
+        fetch(url.toString())
+            .then((res) => res.json())
+            .then((data) => {
+                const mapped: Course[] = (data.courses || []).flatMap((c: any) =>
+                    (c.sections || []).map((s: any) => ({
+                        code: c.code,
+                        title: c.name,
+                        seats: s.openSeats ?? "N/A",
+                        req: "Req TBD",
+                        difficulty: Math.min(5, Math.max(1, Math.floor(Math.random() * 5) + 1)),
+                        id: s.classNumber ?? `${c.code}-${s.number}`,
+                    }))
+                );
+                setCourses(mapped);
+                setVisibleCount(4);
+            })
+            .catch((err) => console.error("Failed to fetch courses:", err));
+    };
 
     return (
         <Box sx={{ minHeight: "100vh", bgcolor: "background.default", color: "text.primary" }}>
@@ -107,7 +172,6 @@ export default function StartingMenu() {
                         CoursePath
                     </Typography>
                     <Chip label="Preview" size="small" variant="outlined" />
-
                     <Box sx={{ flexGrow: 1 }} />
 
                     {/* Semester */}
@@ -124,15 +188,7 @@ export default function StartingMenu() {
                             <Typography variant="caption" sx={{ px: 2, pt: 1 }}>Choose semester</Typography>
                             <Divider sx={{ my: 1 }} />
                             {["Spring 2026", "Fall 2025", "Summer 2025"].map((s) => (
-                                <MenuItem
-                                    key={s}
-                                    onClick={() => {
-                                        setSemester(s);
-                                        setSemAnchor(null);
-                                    }}
-                                >
-                                    {s}
-                                </MenuItem>
+                                <MenuItem key={s} onClick={() => { setSemester(s); setSemAnchor(null); }}>{s}</MenuItem>
                             ))}
                         </Menu>
                     </Box>
@@ -152,15 +208,7 @@ export default function StartingMenu() {
                             <Divider sx={{ my: 1 }} />
                             {["Computer Science (BS)", "Data Science (BS)", "Mathematics (BA)", "Information Systems (BS)"].map(
                                 (m) => (
-                                    <MenuItem
-                                        key={m}
-                                        onClick={() => {
-                                            setMajor(m);
-                                            setMajorAnchor(null);
-                                        }}
-                                    >
-                                        {m}
-                                    </MenuItem>
+                                    <MenuItem key={m} onClick={() => { setMajor(m); setMajorAnchor(null); }}>{m}</MenuItem>
                                 )
                             )}
                         </Menu>
@@ -184,7 +232,7 @@ export default function StartingMenu() {
             <Container maxWidth="lg" sx={{ py: 3 }}>
                 <Grid container spacing={3}>
                     {/* Left: Requirements */}
-                    <Grid size={{xs: 12, lg: 4}}>
+                    <Grid size={{ xs: 12, lg: 4 }}>
                         <Stack spacing={2}>
                             <Card variant="outlined">
                                 <CardHeader
@@ -201,13 +249,7 @@ export default function StartingMenu() {
                                         {mockRequirements.map((r) => (
                                             <ListItem
                                                 key={r.id}
-                                                sx={{
-                                                    my: 0.5,
-                                                    border: 1,
-                                                    borderColor: "divider",
-                                                    borderRadius: 1.5,
-                                                    px: 1.5,
-                                                }}
+                                                sx={{ my: 0.5, border: 1, borderColor: "divider", borderRadius: 1.5, px: 1.5 }}
                                                 secondaryAction={<Chip label={r.status} size="small" />}
                                             >
                                                 <ListItemText
@@ -221,48 +263,15 @@ export default function StartingMenu() {
                                     </List>
                                     <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 1.5 }}>
                                         <InfoOutlinedIcon sx={{ fontSize: 16 }} />
-                                        <Typography variant="caption">
-                                            Hover a course to see which requirement it can satisfy.
-                                        </Typography>
+                                        <Typography variant="caption">Hover a course to see which requirement it can satisfy.</Typography>
                                     </Stack>
-                                </CardContent>
-                            </Card>
-
-                            <Card variant="outlined">
-                                <CardHeader
-                                    title={
-                                        <Stack direction="row" spacing={1} alignItems="center">
-                                            <BoltIcon sx={{ fontSize: 18 }} />
-                                            <Typography variant="subtitle1">Quick Starts</Typography>
-                                        </Stack>
-                                    }
-                                    sx={{ pb: 0 }}
-                                />
-                                <CardContent>
-                                    <Grid container spacing={1.5}>
-                                        {[
-                                            { title: "Freshman Plan", desc: "Gen Ed + Starter CS" },
-                                            { title: "Upper-Division", desc: "Fill remaining core" },
-                                            { title: "Transfer Map", desc: "Max credit overlap" },
-                                            { title: "Explore Paths", desc: "See course pathways" },
-                                        ].map((q) => (
-                                            <Grid size={{xs: 12, sm:6}} key={q.title}>
-                                                <Button fullWidth variant="outlined" endIcon={<ArrowForwardIcon />} sx={{ justifyContent: "space-between", textTransform: "none" }}>
-                                                    <Box textAlign="left">
-                                                        <Typography variant="body2" fontWeight={600}>{q.title}</Typography>
-                                                        <Typography variant="caption" color="text.secondary">{q.desc}</Typography>
-                                                    </Box>
-                                                </Button>
-                                            </Grid>
-                                        ))}
-                                    </Grid>
                                 </CardContent>
                             </Card>
                         </Stack>
                     </Grid>
 
                     {/* Right: Search & Courses */}
-                    <Grid size={{xs:12, lg:8}}>
+                    <Grid size={{ xs: 12, lg: 8 }}>
                         <Stack spacing={2}>
                             <Card variant="outlined">
                                 <CardContent>
@@ -280,31 +289,20 @@ export default function StartingMenu() {
                                                 ),
                                             }}
                                         />
-                                        <Button variant="contained" startIcon={<SearchIcon />}>Search</Button>
+                                        <Button variant="contained" startIcon={<SearchIcon />} onClick={handleSearch}>
+                                            Search
+                                        </Button>
                                     </Stack>
                                     <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: "block" }}>
-                                        Try: "COP3502", "calculus", or "gen ed"
+                                        Try: "ABE2012C", "calculus", or "gen ed"
                                     </Typography>
                                 </CardContent>
                             </Card>
 
-                            <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                <Typography variant="body2" color="text.secondary">
-                                    {filtered.length} result(s) • Semester: <Typography component="span" variant="body2" color="text.primary" fontWeight={600}>{semester}</Typography>
-                                </Typography>
-                                <Stack direction="row" spacing={1} alignItems="center">
-                                    <Chip label="Seat availability" size="small" variant="outlined" />
-                                    <Divider flexItem orientation="vertical" />
-                                    <Chip label="Requirement match" size="small" variant="outlined" />
-                                    <Divider flexItem orientation="vertical" />
-                                    <Chip label="Difficulty" size="small" variant="outlined" />
-                                </Stack>
-                            </Stack>
-
                             <Grid container spacing={2}>
-                                {filtered.map((c) => (
-                                    <Grid size={{xs: 12, sm:6}} key={c.code}>
-                                        <Card variant="outlined" sx={{ transition: "background .15s", '&:hover': { bgcolor: 'action.hover' } }}>
+                                {filtered.slice(0, visibleCount).map((c) => (
+                                    <Grid size={{ xs: 12, sm: 6 }} key={c.id}>
+                                        <Card variant="outlined" sx={{ transition: "background .15s", "&:hover": { bgcolor: "action.hover" } }}>
                                             <CardHeader
                                                 title={
                                                     <Box>
@@ -313,7 +311,9 @@ export default function StartingMenu() {
                                                         </Typography>
                                                         <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
                                                             <Chip size="small" variant="outlined" label={c.req} />
-                                                            <Typography variant="caption" color="text.secondary">Seats: {c.seats}</Typography>
+                                                            <Typography variant="caption" color="text.secondary">
+                                                                Seats: {c.seats}
+                                                            </Typography>
                                                         </Stack>
                                                     </Box>
                                                 }
@@ -337,6 +337,12 @@ export default function StartingMenu() {
                                     </Grid>
                                 ))}
                             </Grid>
+
+                            {visibleCount < filtered.length && (
+                                <Box sx={{ textAlign: "center", mt: 2 }}>
+                                    <Button variant="outlined" onClick={() => setVisibleCount((prev) => prev + 4)}>Show More</Button>
+                                </Box>
+                            )}
                         </Stack>
                     </Grid>
                 </Grid>
