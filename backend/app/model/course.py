@@ -62,9 +62,9 @@ class Course(BaseModel):
 
 
 class FilterParams(BaseModel):
-    requirement_satisfied: str | None
-    course_code: str | None
-    instructor: str | None
+    requirement_satisfied: Optional[str]
+    course_code: Optional[str]
+    instructor: Optional[str]
 
 
 class CourseSearchResponse(BaseModel):

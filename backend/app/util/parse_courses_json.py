@@ -12,6 +12,7 @@ def parse_courses_json(path: str | Path) -> List[Course]:
         try:
             return model(**kwargs)
         except ValidationError:
+            print('invalid', kwargs)
             return None
 
     p = Path(path)
