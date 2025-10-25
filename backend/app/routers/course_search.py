@@ -5,7 +5,7 @@ from app.util.parse_courses_json import parse_courses_json
 from app.model.course import FilterParams, Course, CourseSearchResponse
 from app.util.requirement_matchers import RULES, course_fulfills
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import httpx
@@ -15,8 +15,8 @@ courses = parse_courses_json("app/data/courses_spring_2026.json")
 requirements = [rule["name"] for rule in RULES]
 
 
-@router.post("/search", response_model=CourseSearchResponse)
-def course_search(req: FilterParams) -> CourseSearchResponse:
+@router.get("/search", response_model=CourseSearchResponse)
+def course_search(req: FilterParams = Depends()) -> CourseSearchResponse:
     return_courses: list[Course] = courses
     if req.course_code and req.course_code != "null":
         print("cc")
@@ -36,7 +36,7 @@ def course_search(req: FilterParams) -> CourseSearchResponse:
             course for course in return_courses if course_fulfills(course, req.requirement_satisfied)
         ]
 
-    return CourseSearchResponse(courses=return_courses)
+    return CourseSearchResponse(courses=return_courses[:20])
 
 
 @router.get("/all_requirements", response_model=list[str])
