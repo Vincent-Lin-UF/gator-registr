@@ -11,7 +11,7 @@ from pydantic import BaseModel
 import httpx
 
 router = APIRouter(prefix="/uf", tags=["uf"])
-courses = parse_courses_json("../data/courses_spring_2026.json")
+courses = parse_courses_json("app/data/courses_spring_2026.json")
 requirements = [rule["name"] for rule in RULES]
 
 
