@@ -20,12 +20,12 @@ def course_search(req: FilterParams = Depends()) -> CourseSearchResponse:
     return_courses: list[Course] = courses
     if req.course_code and req.course_code != "null":
         print("cc")
-        return_courses = [course for course in return_courses if course.code == req.course_code]
+        return_courses = [course for course in return_courses if course.code == req.course_code.upper()]
 
     if req.instructor and req.instructor != "null":
         print('i')
         return_courses = [
-            course for course in return_courses if req.instructor in set().union(
+            course for course in return_courses if req.instructor.lower() in set().union(
                 *[{instructor for instructor in section.instructors} for section in course.sections]
             )
         ]
