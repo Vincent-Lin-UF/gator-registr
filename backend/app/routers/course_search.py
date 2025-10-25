@@ -1,4 +1,5 @@
 from __future__ import annotations
+import json
 from typing import Dict, Any, List
 
 from app.util.parse_courses_json import parse_courses_json
@@ -48,6 +49,9 @@ class UserRequirementsParams(BaseModel):
     username: str
 
 
-@router.get("/user_requirements", response_class=JSONResponse)
-def user_requirements(req: UserRequirementsParams) -> JSONResponse:
-    pass
+@router.get("/user_requirements", response_model=list[str])
+def user_requirements(req: UserRequirementsParams = Depends()) -> list[str]:
+    with open('app/data/requirements_rules_with_status.json', 'r') as f:
+        data = json.load(f)
+        return [rule["name"] for rule in data['rules'] if not rule["completed"]]
+

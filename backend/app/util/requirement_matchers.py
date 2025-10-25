@@ -44,7 +44,7 @@ def _prefix_level_between(code: str, prefix: str, min_level: int, max_level: int
 def _any_course(_: str) -> bool:
     return True
 
-RULES: Dict[str, Dict[str, Any]] = json.loads(Path("app/data/requirements_rules.json").read_text())["rules"]
+RULES: list[Dict[str, Any]] = json.loads(Path("app/data/requirements_rules.json").read_text())["rules"]
 
 def requirement_names() -> List[str]:
     return [r["name"] for r in RULES]
