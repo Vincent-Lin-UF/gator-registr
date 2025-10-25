@@ -9,15 +9,13 @@ A **fully runnable** front-end preview of the Starting Menu page. Includes:
 
 ## Quick Start
 
+Install requirements
 ```bash
-# 1) unzip
-unzip coursepath-ui.zip -d coursepath-ui
-cd coursepath-ui
-
-# 2) install deps
 npm install
+```
 
-# 3) run dev server
+Run Development server
+```bash
 npm run dev
 ```
 
